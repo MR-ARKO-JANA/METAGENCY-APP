@@ -189,24 +189,22 @@ function Dashboard() {
         <p className="mt-1 text-sm text-slate-500">How can we help you today?</p>
       </div>
 
-      {/* ── Hero banner (animated gradient + floating orbs + floating image) ── */}
+      {/* ── Hero banner (static background + fixed image) ── */}
       <div
         ref={heroRef}
         className="relative overflow-hidden rounded-3xl p-6 sm:p-8"
         style={{
           background: "linear-gradient(135deg, #0f2b73 0%, #1e40af 45%, #2563eb 75%, #0f2b73 100%)",
-          backgroundSize: "200% 200%",
-          animation: "gradientShift 5s ease infinite",
           opacity: heroVisible ? 1 : 0,
           transform: heroVisible ? "translateY(0)" : "translateY(30px)",
           transition: "opacity 0.6s ease, transform 0.6s cubic-bezier(.34,1.2,.64,1)",
         }}
       >
-        {/* Floating glowing orbs */}
+        {/* Decorative background orbs (static) */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div style={{ position: "absolute", top: "-20%", right: "10%", width: 180, height: 180, borderRadius: "50%", background: "rgba(96,165,250,0.18)", animation: "float 4s ease-in-out infinite" }} />
-          <div style={{ position: "absolute", bottom: "-10%", right: "25%", width: 120, height: 120, borderRadius: "50%", background: "rgba(139,92,246,0.15)", animation: "floatSlow 6s ease-in-out infinite" }} />
-          <div style={{ position: "absolute", top: "30%", left: "55%", width: 60, height: 60, borderRadius: "50%", background: "rgba(34,211,238,0.12)", animation: "float 3s ease-in-out infinite reverse" }} />
+          <div style={{ position: "absolute", top: "-20%", right: "10%", width: 180, height: 180, borderRadius: "50%", background: "rgba(96,165,250,0.18)" }} />
+          <div style={{ position: "absolute", bottom: "-10%", right: "25%", width: 120, height: 120, borderRadius: "50%", background: "rgba(139,92,246,0.15)" }} />
+          <div style={{ position: "absolute", top: "30%", left: "55%", width: 60, height: 60, borderRadius: "50%", background: "rgba(34,211,238,0.12)" }} />
         </div>
 
         <div className="relative z-10 w-3/5 md:w-1/2">
