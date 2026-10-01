@@ -228,7 +228,7 @@ function Dashboard() {
         <img
           src={doctorPortrait}
           alt="Doctor"
-          className="absolute bottom-0 right-0 h-full w-auto object-contain object-bottom drop-shadow-2xl md:-right-4"
+          className="absolute bottom-0 right-4 h-full w-auto object-contain object-bottom drop-shadow-2xl md:right-12 lg:right-24"
         />
       </div>
 
