@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportAppError } from "../lib/error-reporting";
@@ -121,26 +121,6 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-
-  useEffect(() => {
-    const removeBadge = () => {
-      const candidates = document.querySelectorAll(
-        '[class*="lovable"], [id*="lovable"], a[href*="lovable.dev"]',
-      );
-      candidates.forEach((el) => {
-        // Find top floating container if nested
-        const parent =
-          el.closest('div[style*="fixed"], div[class*="fixed"], div[style*="z-index"]') || el;
-        parent.remove();
-      });
-    };
-
-    removeBadge();
-    const observer = new MutationObserver(() => removeBadge());
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
