@@ -218,7 +218,7 @@ function Appointments() {
                   </Button>
                 )}
               </div>
-            </Panel>
+            </div>
           );
         })}
       </div>
