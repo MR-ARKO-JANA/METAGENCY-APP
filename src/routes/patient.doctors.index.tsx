@@ -39,8 +39,8 @@ function FindDoctor() {
   return (
     <div>
       <PageTitle
-        title="Find a Doctor"
-        subtitle="Only doctors with approved verification can be booked."
+        title="Select Doctor"
+        subtitle=""
       />
       <div className="relative mb-3">
         <Search
@@ -50,12 +50,31 @@ function FindDoctor() {
         <Input
           value={filters.q}
           onChange={(e) => setFilters({ ...filters, q: e.target.value })}
-          placeholder="Search by doctor name or specialty"
-          className="h-11 bg-card pl-9"
+          placeholder="Search doctor by name or specialty"
+          className="h-11 bg-card pl-9 rounded-xl shadow-sm border-0 focus:ring-2 focus:ring-blue-500/20 transition-all"
           aria-label="Search doctors"
         />
       </div>
-      <DoctorFilters value={filters} onChange={setFilters} withSort />
+      
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+        {["General Physician", "Gynecologist", "Psychiatrist"].map((spec) => (
+          <button
+            key={spec}
+            onClick={() => setFilters({ ...filters, specialty: spec })}
+            className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
+              filters.specialty === spec
+                ? "bg-blue-600 text-white shadow-md"
+                : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+            }`}
+          >
+            {spec}
+          </button>
+        ))}
+      </div>
+
+      <div className="hidden">
+        <DoctorFilters value={filters} onChange={setFilters} withSort />
+      </div>
       <p className="mt-4 text-sm text-muted-foreground">
         {list.length} doctor{list.length === 1 ? "" : "s"} found · ratings shown are sample data
       </p>

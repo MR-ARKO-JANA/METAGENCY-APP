@@ -144,107 +144,43 @@ export function DoctorPhoto({ doctor, size = 64 }: { doctor: Doctor; size?: numb
 
 export function DoctorCard({ doctor, nextSlots }: { doctor: Doctor; nextSlots?: string[] }) {
   const bookable = doctor.verification === "approved";
+  const availableNow = bookable && nextSlots && nextSlots.length > 0;
+
   return (
-    <div
-      className="group flex flex-col gap-3 rounded-2xl bg-white p-4 sm:p-5 transition-all hover:-translate-y-0.5"
+    <Link
+      to="/patient/doctors/$doctorId"
+      params={{ doctorId: doctor.id }}
+      className="group flex items-start gap-4 rounded-2xl bg-white p-4 transition-all hover:bg-slate-50 card-hover"
       style={{
-        boxShadow: "0 2px 16px rgba(37,99,235,0.07)",
-        border: "1px solid rgba(59,130,246,0.1)",
+        boxShadow: "0 2px 16px rgba(0,0,0,0.03)",
+        border: "1px solid rgba(0,0,0,0.05)",
       }}
     >
-      <div className="flex gap-3">
-        <DoctorPhoto doctor={doctor} size={72} />
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="truncate font-bold text-slate-800">{doctor.name}</h3>
-            <VerifiedBadge doctor={doctor} />
-          </div>
-          <p className="text-sm font-semibold" style={{ color: "#2563eb" }}>{doctor.specialization}</p>
-          <p className="truncate text-xs text-slate-400">{doctor.qualifications}</p>
-          {bookable && (
-            <p className="mt-0.5 text-[11px] text-slate-400">{doctor.registration}</p>
-          )}
-        </div>
+      <div className="relative shrink-0">
+        <DoctorPhoto doctor={doctor} size={64} />
       </div>
 
-      {/* Stats row */}
-      <div className="grid grid-cols-3 gap-2 rounded-xl p-2.5 text-center text-xs" style={{ background: "#f8faff" }}>
-        <div>
-          <strong className="block text-sm font-bold text-slate-700">{doctor.experience} yrs</strong>
-          <span className="text-slate-400">Experience</span>
-        </div>
-        <div>
-          <strong className="block text-sm font-bold text-slate-700">₹{doctor.fee}</strong>
-          <span className="text-slate-400">Fee</span>
-        </div>
-        <div>
-          {bookable ? (
-            <>
-              <strong className="flex items-center justify-center gap-0.5 text-sm font-bold" style={{ color: "#f59e0b" }}>
-                <Star size={12} className="fill-current" />
-                {doctor.sampleRating}
-              </strong>
-              <span className="text-slate-400">Rating</span>
-            </>
-          ) : (
-            <>
-              <strong className="block text-sm font-bold text-slate-700">—</strong>
-              <span className="text-slate-400">Rating</span>
-            </>
-          )}
-        </div>
+      <div className="min-w-0 flex-1 flex flex-col justify-center py-1">
+        <h3 className="truncate font-bold text-slate-900">{doctor.name}</h3>
+        <p className="truncate mt-0.5 text-[11px] font-medium text-slate-500">
+          {doctor.qualifications} - {doctor.specialization}
+        </p>
+        <p className="mt-0.5 text-[11px] font-medium text-slate-500">
+          {doctor.experience} Years Experience
+        </p>
       </div>
 
-      <p className="flex items-center gap-1.5 text-xs text-slate-400">
-        <Languages size={13} />
-        {doctor.languages.join(", ")}
-      </p>
-
-      {nextSlots && (
-        <div className="flex flex-wrap gap-1.5">
-          {nextSlots.length ? (
-            nextSlots.slice(0, 4).map((s) => (
-              <span
-                key={s}
-                className="rounded-lg px-2.5 py-1 text-[11px] font-medium"
-                style={{ background: "#eff6ff", color: "#2563eb" }}
-              >
-                {s}
-              </span>
-            ))
-          ) : (
-            <span className="text-xs text-slate-400">
-              {bookable ? "No slots available soon" : "Not available for booking yet"}
-            </span>
-          )}
-        </div>
-      )}
-
-      <div className="mt-auto grid grid-cols-2 gap-2">
-        <Button
-          variant="outline"
-          asChild
-          className="rounded-xl border-slate-200 font-semibold text-slate-700 hover:bg-slate-50"
-        >
-          <Link to="/patient/doctors/$doctorId" params={{ doctorId: doctor.id }}>
-            View Profile
-          </Link>
-        </Button>
+      <div className="flex flex-col items-end gap-3 text-right shrink-0 ml-2 py-1">
+        <span className="font-extrabold text-slate-800 text-sm">₹{doctor.fee}</span>
         {bookable ? (
-          <Button
-            asChild
-            className="rounded-xl font-bold text-white shadow-sm"
-            style={{ background: "linear-gradient(135deg, #2563eb, #1d4ed8)" }}
-          >
-            <Link to="/patient/book/$doctorId" params={{ doctorId: doctor.id }}>
-              Book
-            </Link>
-          </Button>
+          <span className="text-[10px] font-bold text-emerald-600">
+            {availableNow ? "Available Now" : "Available Later"}
+          </span>
         ) : (
-          <Button disabled className="rounded-xl">Unavailable</Button>
+          <span className="text-[10px] font-bold text-slate-400">Unavailable</span>
         )}
       </div>
-    </div>
+    </Link>
   );
 }
 
