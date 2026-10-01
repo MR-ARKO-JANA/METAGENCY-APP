@@ -98,34 +98,59 @@ function Appointments() {
 
   return (
     <div>
-      <PageTitle
-        title="My Appointments"
-        action={
-          <Button asChild>
-            <Link to="/patient/doctors">Book new</Link>
-          </Button>
-        }
-      />
-      <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)}>
-        <TabsList>
-          {(["upcoming", "completed", "cancelled"] as Tab[]).map((t) => (
-            <TabsTrigger key={t} value={t} className="capitalize">
-              {t} ({lists[t].length})
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+      <div className="mb-5 flex items-center justify-between animate-fade-in-down">
+        <div>
+          <h1 className="text-2xl font-black text-slate-800">My Appointments</h1>
+          <p className="mt-1 text-sm text-slate-500">Track all your consultations in one place</p>
+        </div>
+        <Button
+          asChild
+          className="rounded-xl font-bold shadow-md btn-ripple"
+          style={{ background: "linear-gradient(135deg,#2563eb,#1d4ed8)", color: "white" }}
+        >
+          <Link to="/patient/doctors">+ Book new</Link>
+        </Button>
+      </div>
+      <div className="mb-4 flex gap-2 animate-fade-in-up delay-75">
+        {(["upcoming", "completed", "cancelled"] as Tab[]).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className="rounded-full px-4 py-1.5 text-sm font-bold transition-all capitalize"
+            style={{
+              background: tab === t ? "linear-gradient(135deg,#2563eb,#1d4ed8)" : "white",
+              color: tab === t ? "white" : "#64748b",
+              boxShadow: tab === t ? "0 4px 12px rgba(37,99,235,0.25)" : "0 1px 4px rgba(0,0,0,0.06)",
+              border: tab === t ? "none" : "1px solid rgba(0,0,0,0.06)",
+              transform: tab === t ? "scale(1.05)" : "scale(1)",
+            }}
+          >
+            {t} ({lists[t].length})
+          </button>
+        ))}
+      </div>
       <div className="mt-4 grid gap-3">
         {lists[tab].length === 0 && (
-          <Panel>
-            <p className="text-sm text-muted-foreground">No {tab} appointments.</p>
-          </Panel>
+          <div
+            className="rounded-2xl bg-white p-8 text-center animate-scale-in"
+            style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.05)" }}
+          >
+            <p className="text-slate-400 font-medium">No {tab} appointments yet.</p>
+          </div>
         )}
-        {lists[tab].map((a) => {
+        {lists[tab].map((a, idx) => {
           const d = getDoctor(a.doctorId)!;
           const { eligible } = joinWindow(a, now);
           return (
-            <Panel key={a.id} className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div
+              key={a.id}
+              className="flex flex-col gap-3 rounded-2xl bg-white p-4 sm:flex-row sm:items-center transition-all hover:shadow-md"
+              style={{
+                boxShadow: "0 2px 16px rgba(37,99,235,0.05)",
+                border: "1px solid rgba(59,130,246,0.08)",
+                animation: `fadeInUp 0.4s ease ${idx * 70}ms both`,
+              }}
+            >
               <div className="flex flex-1 gap-3">
                 <DoctorPhoto doctor={d} size={56} />
                 <div className="min-w-0">
