@@ -33,24 +33,33 @@ export function NotificationList({ userId }: { userId: string }) {
             <p className="text-sm text-muted-foreground">You're all caught up.</p>
           </Panel>
         )}
-        {mine.map((n) => (
+        {mine.map((n, i) => (
           <div
             key={n.id}
-            className="flex gap-4 rounded-2xl bg-white p-4 transition-all"
+            className="flex gap-4 rounded-2xl bg-white p-4 transition-all hover:shadow-md"
             style={{
               boxShadow: "0 2px 16px rgba(0,0,0,0.03)",
               border: "1px solid rgba(0,0,0,0.05)",
+              animation: `fadeInUp 0.45s ease ${i * 80}ms both`,
+              transitionDuration: "0.25s",
             }}
           >
             <span
-              className={`mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full ${n.read ? "bg-slate-100 text-slate-400" : "bg-[#2563eb] text-white"}`}
+              className={`mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full ${n.read ? "bg-slate-100 text-slate-400" : "bg-[#2563eb] text-white animate-pulse-glow"}`}
             >
               <Bell size={16} />
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-[15px] font-bold text-slate-800">
                 {n.title}
-                {!n.read && <span className="ml-2 text-xs font-semibold text-[#2563eb]">New</span>}
+                {!n.read && (
+                  <span
+                    className="ml-2 rounded-full px-2 py-0.5 text-[10px] font-black text-white animate-bounce-in"
+                    style={{ background: "linear-gradient(135deg, #2563eb, #7c3aed)" }}
+                  >
+                    NEW
+                  </span>
+                )}
               </p>
               <p className="text-sm text-slate-500 mt-0.5">{n.body}</p>
               <p className="mt-1 text-[11px] text-slate-400">
@@ -63,7 +72,7 @@ export function NotificationList({ userId }: { userId: string }) {
             {!n.read && (
               <button
                 onClick={() => markRead(n.id)}
-                className="text-xs font-semibold text-slate-700 hover:text-black transition-colors self-start mt-1"
+                className="text-xs font-bold text-slate-500 hover:text-blue-600 transition-colors self-start mt-1 animated-underline"
               >
                 Mark read
               </button>
