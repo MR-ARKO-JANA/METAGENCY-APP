@@ -18,6 +18,7 @@ import { DoctorFilters, applyFilters, emptyFilters } from "@/components/medergen
 import { doctors } from "@/lib/medergency/mock-data";
 import { getDoctor, joinWindow, useMedergency, useNow } from "@/lib/medergency/store";
 import { nextOpenSlots } from "@/lib/medergency/availability";
+import doctorPortrait from "@/assets/doctor-portrait.png";
 
 export const Route = createFileRoute("/patient/")({
   head: () => ({
@@ -80,40 +81,61 @@ function Dashboard() {
 
   return (
     <div className="grid gap-5">
-      <section
-        className="rounded-2xl p-5 text-primary-foreground sm:p-7"
-        style={{ background: "var(--gradient-success)" }}
-      >
-        <h1 className="text-2xl font-bold sm:text-3xl">
-          Hello, {currentPatient?.fullName.split(" ")[0]}!
+      <div className="mb-2">
+        <h1 className="text-xl font-bold text-slate-800 sm:text-2xl">
+          Hello, {currentPatient?.fullName.split(" ")[0]} 👋
         </h1>
-        <p className="mt-1 text-sm text-primary-foreground/80">
-          Find the right doctor and take care of your health.
-        </p>
-        <form
-          className="mt-5 flex max-w-xl flex-col gap-2 sm:flex-row"
-          onSubmit={(e) => {
-            e.preventDefault();
-            navigate({ to: "/patient/doctors", search: { q } });
-          }}
-        >
-          <div className="relative flex-1">
-            <Search
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-            />
-            <Input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search doctors, specialties..."
-              className="h-11 bg-card pl-9 text-foreground"
-            />
-          </div>
-          <Button type="submit" variant="secondary" size="lg" className="h-11">
-            Find a Doctor
+        <p className="mt-1 text-sm text-slate-500">How can we help you today?</p>
+      </div>
+
+      <section
+        className="relative overflow-hidden rounded-3xl p-6 sm:p-8"
+        style={{ background: "linear-gradient(135deg, #0f2b73 0%, #0a1f5c 100%)" }}
+      >
+        <div className="relative z-10 w-2/3 md:w-1/2">
+          <h2 className="text-xl font-bold leading-tight text-white sm:text-2xl md:text-3xl">
+            Consult a Doctor<br />Connect in Minutes
+          </h2>
+          <p className="mt-3 text-xs leading-relaxed text-blue-100 sm:text-sm">
+            Book an instant consultation<br />with experienced doctors
+          </p>
+          <Button 
+            className="mt-5 rounded-xl bg-white px-6 font-bold text-[#0f2b73] hover:bg-slate-100 shadow-md"
+            onClick={() => navigate({ to: "/patient/doctors" })}
+          >
+            Consult Now
           </Button>
-        </form>
+        </div>
+        <img
+          src={doctorPortrait}
+          alt="Doctor"
+          className="absolute bottom-0 right-0 h-[110%] w-auto object-contain object-bottom drop-shadow-xl md:-right-5"
+        />
       </section>
+
+      <form
+        className="mt-2 flex max-w-xl flex-col gap-2 sm:flex-row"
+        onSubmit={(e) => {
+          e.preventDefault();
+          navigate({ to: "/patient/doctors", search: { q } });
+        }}
+      >
+        <div className="relative flex-1">
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          />
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search doctors, specialties..."
+            className="h-11 rounded-xl bg-card pl-9 text-foreground shadow-sm"
+          />
+        </div>
+        <Button type="submit" variant="default" size="lg" className="h-11 rounded-xl font-bold shadow-sm" style={{ backgroundColor: "#2563eb", color: "white" }}>
+          Find a Doctor
+        </Button>
+      </form>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {actions.map(({ to, label, icon: Icon }) => (
