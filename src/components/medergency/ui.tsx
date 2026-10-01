@@ -4,6 +4,8 @@ import { useEffect, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { useMedergency } from "@/lib/medergency/store";
 import type { AppointmentStatus, Doctor, PaymentStatus, Role } from "@/lib/medergency/types";
+import companyLogo from "@/assets/signal-2026-09-15-23-14-14-623.png";
+import companyName from "@/assets/signal-2026-09-15-23-14-14-623_002.png";
 
 export function Brand({
   compact = false,
@@ -15,15 +17,22 @@ export function Brand({
   return (
     <Link
       to="/"
-      className={`brand-lockup ${inverse ? "brand-lockup-inverse" : ""} justify-start`}
+      className={`brand-lockup ${inverse ? "brand-lockup-inverse" : ""} inline-flex items-center gap-3 justify-start`}
       aria-label="Medergency home"
     >
-      <div className="brand-mark" aria-hidden="true">
-        <span>M</span>
-        <i />
-      </div>
-      <div className="text-left">
-        <strong className={compact ? "text-base" : "text-lg"}>Medergency</strong>
+      <img
+        src={companyLogo}
+        alt="Medergency Logo"
+        className={compact ? "h-9 w-9 object-contain" : "h-11 w-11 object-contain"}
+      />
+      <div className="flex flex-col justify-center text-left">
+        <img
+          src={companyName}
+          alt="Medergency"
+          className={`${compact ? "h-5.5" : "h-7"} w-auto object-contain object-left ${
+            inverse ? "brightness-0 invert" : ""
+          }`}
+        />
         {!compact && <small>Life Deserves Care</small>}
       </div>
     </Link>

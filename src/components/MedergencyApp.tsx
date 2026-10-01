@@ -28,6 +28,8 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import doctorPortrait from "../assets/doctor-portrait.png";
+import companyLogo from "../assets/signal-2026-09-15-23-14-14-623.png";
+import companyName from "../assets/signal-2026-09-15-23-14-14-623_002.png";
 
 type FormState = Record<string, string>;
 
@@ -35,13 +37,20 @@ const stepLabels = ["Sign Up", "Details", "Documents", "Verification", "Approved
 
 function BrandLogo({ compact = false, inverse = false }: { compact?: boolean; inverse?: boolean }) {
   return (
-    <div className={`brand-lockup ${inverse ? "brand-lockup-inverse" : ""}`}>
-      <div className="brand-mark" aria-hidden="true">
-        <span>M</span>
-        <i />
-      </div>
-      <div>
-        <strong className={compact ? "text-sm" : "text-lg"}>Medergency</strong>
+    <div className={`brand-lockup ${inverse ? "brand-lockup-inverse" : ""} inline-flex items-center gap-3`}>
+      <img
+        src={companyLogo}
+        alt="Medergency Logo"
+        className={compact ? "h-9 w-9 object-contain" : "h-11 w-11 object-contain"}
+      />
+      <div className="flex flex-col justify-center text-left">
+        <img
+          src={companyName}
+          alt="Medergency"
+          className={`${compact ? "h-5.5" : "h-7"} w-auto object-contain object-left ${
+            inverse ? "brightness-0 invert" : ""
+          }`}
+        />
         {!compact && <small>Life Deserves Care</small>}
       </div>
     </div>
