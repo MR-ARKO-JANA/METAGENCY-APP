@@ -74,44 +74,50 @@ function Profile() {
         title="My Profile"
         action={
           !editing && (
-            <Button variant="outline" onClick={() => setEditing(true)}>
-              <Pencil size={15} />
+            <Button variant="outline" onClick={() => setEditing(true)} className="rounded-xl border-slate-200 font-semibold text-slate-700 hover:bg-slate-50 shadow-sm">
+              <Pencil size={14} className="mr-1.5" />
               Edit Profile
             </Button>
           )
         }
       />
-      <Panel>
-        <div className="grid gap-4 sm:grid-cols-2">
+      <div
+        className="rounded-2xl bg-white p-6 transition-all animate-fade-in-up"
+        style={{
+          boxShadow: "0 2px 16px rgba(0,0,0,0.03)",
+          border: "1px solid rgba(0,0,0,0.05)",
+        }}
+      >
+        <div className="grid gap-6 sm:grid-cols-2">
           {rows.map(([label, key, type]) => (
             <div key={key} className={key === "address" ? "sm:col-span-2" : ""}>
-              <Label htmlFor={key}>{label}</Label>
+              <Label htmlFor={key} className="text-[13px] font-bold text-slate-800">{label}</Label>
               {editing ? (
                 <>
                   <Input
                     id={key}
                     type={type}
-                    className="mt-1.5"
+                    className="mt-1.5 h-10 rounded-xl bg-slate-50 border-0 shadow-inner focus-visible:ring-blue-500/20"
                     value={form[key]}
                     onChange={set(key)}
                   />
                   <FieldError message={errors[key]} />
                 </>
               ) : (
-                <p className="mt-1 text-sm text-foreground">
+                <p className="mt-1 text-[15px] font-medium text-slate-500">
                   {(key === "mobile" ? `+91 ${p.mobile}` : p[key]) || "—"}
                 </p>
               )}
             </div>
           ))}
           <div>
-            <Label htmlFor="gender">Gender</Label>
+            <Label htmlFor="gender" className="text-[13px] font-bold text-slate-800">Gender</Label>
             {editing ? (
               <select
                 id="gender"
                 value={form.gender}
                 onChange={set("gender")}
-                className="mt-1.5 h-9 w-full rounded-md border bg-card px-3 text-sm"
+                className="mt-1.5 h-10 w-full rounded-xl border-0 bg-slate-50 px-3 text-sm shadow-inner focus:ring-2 focus:ring-blue-500/20"
               >
                 <option value="">Prefer not to say</option>
                 <option>Female</option>
@@ -119,33 +125,39 @@ function Profile() {
                 <option>Other</option>
               </select>
             ) : (
-              <p className="mt-1 text-sm text-foreground">{p.gender || "—"}</p>
+              <p className="mt-1 text-[15px] font-medium text-slate-500">{p.gender || "—"}</p>
             )}
           </div>
         </div>
         {editing && (
-          <div className="mt-5 flex gap-2">
-            <Button onClick={save}>Save changes</Button>
+          <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-slate-100">
             <Button
               variant="ghost"
               onClick={() => {
                 setEditing(false);
                 setErrors({});
               }}
+              className="rounded-xl text-slate-600 hover:bg-slate-100"
             >
               Cancel
             </Button>
+            <Button onClick={save} className="rounded-xl bg-blue-600 text-white shadow-md hover:bg-blue-700">
+              Save changes
+            </Button>
           </div>
         )}
-      </Panel>
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Button variant="outline" asChild>
+      </div>
+      <div className="mt-6 flex flex-wrap items-center gap-4 animate-fade-in-up delay-100">
+        <Button variant="outline" asChild className="rounded-xl border-slate-200 font-semibold text-slate-700 hover:bg-slate-50 shadow-sm">
           <Link to="/patient/settings">Password & preferences</Link>
         </Button>
-        <Button variant="ghost" className="text-destructive" onClick={signOut}>
-          <LogOut size={15} />
+        <button
+          onClick={signOut}
+          className="flex items-center gap-2 text-[15px] font-bold text-red-500 hover:text-red-600 transition-colors bg-transparent border-0"
+        >
+          <LogOut size={16} />
           Logout
-        </Button>
+        </button>
       </div>
     </div>
   );

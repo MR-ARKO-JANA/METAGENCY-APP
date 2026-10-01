@@ -8,25 +8,24 @@ export function NotificationList({ userId }: { userId: string }) {
   const mine = notifications.filter((n) => n.userId === userId);
   return (
     <div>
-      <div className="mb-3 flex flex-wrap gap-2">
+      <div className="mb-4 flex flex-wrap gap-3">
         <Button
           size="sm"
           variant="outline"
           disabled={!mine.some((n) => !n.read)}
           onClick={() => markAllRead(userId)}
+          className="rounded-full bg-white font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
         >
-          <Check size={14} />
+          <Check size={14} className="mr-1.5" />
           Mark all as read
         </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          className="text-destructive"
+        <button
           disabled={!mine.length}
           onClick={() => clearNotifications(userId)}
+          className="text-xs font-bold text-red-500 hover:text-red-600 disabled:opacity-50"
         >
           Clear all
-        </Button>
+        </button>
       </div>
       <div className="grid gap-2">
         {mine.length === 0 && (
@@ -35,22 +34,26 @@ export function NotificationList({ userId }: { userId: string }) {
           </Panel>
         )}
         {mine.map((n) => (
-          <Panel
+          <div
             key={n.id}
-            className={`flex gap-3 !p-3 ${n.read ? "" : "border-primary/40 bg-secondary/40"}`}
+            className="flex gap-4 rounded-2xl bg-white p-4 transition-all"
+            style={{
+              boxShadow: "0 2px 16px rgba(0,0,0,0.03)",
+              border: "1px solid rgba(0,0,0,0.05)",
+            }}
           >
             <span
-              className={`mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full ${n.read ? "bg-muted text-muted-foreground" : "bg-primary text-primary-foreground"}`}
+              className={`mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full ${n.read ? "bg-slate-100 text-slate-400" : "bg-[#2563eb] text-white"}`}
             >
-              <Bell size={15} />
+              <Bell size={16} />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-foreground">
+              <p className="text-[15px] font-bold text-slate-800">
                 {n.title}
-                {!n.read && <span className="ml-2 text-[11px] font-medium text-primary">New</span>}
+                {!n.read && <span className="ml-2 text-xs font-semibold text-[#2563eb]">New</span>}
               </p>
-              <p className="text-sm text-muted-foreground">{n.body}</p>
-              <p className="mt-0.5 text-[11px] text-muted-foreground">
+              <p className="text-sm text-slate-500 mt-0.5">{n.body}</p>
+              <p className="mt-1 text-[11px] text-slate-400">
                 {new Date(n.createdAt).toLocaleString("en-IN", {
                   dateStyle: "medium",
                   timeStyle: "short",
@@ -58,11 +61,14 @@ export function NotificationList({ userId }: { userId: string }) {
               </p>
             </div>
             {!n.read && (
-              <Button size="sm" variant="ghost" onClick={() => markRead(n.id)}>
+              <button
+                onClick={() => markRead(n.id)}
+                className="text-xs font-semibold text-slate-700 hover:text-black transition-colors self-start mt-1"
+              >
                 Mark read
-              </Button>
+              </button>
             )}
-          </Panel>
+          </div>
         ))}
       </div>
     </div>

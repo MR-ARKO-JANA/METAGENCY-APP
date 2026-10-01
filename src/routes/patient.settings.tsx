@@ -54,12 +54,18 @@ function Settings() {
   return (
     <div className="grid max-w-2xl gap-4">
       <PageTitle title="Settings" />
-      <Panel>
-        <h2 className="mb-3 font-semibold text-foreground">Change password</h2>
-        <form onSubmit={submit} className="grid gap-3">
+      <div
+        className="rounded-2xl bg-white p-6 transition-all animate-fade-in-up"
+        style={{
+          boxShadow: "0 2px 16px rgba(0,0,0,0.03)",
+          border: "1px solid rgba(0,0,0,0.05)",
+        }}
+      >
+        <h2 className="mb-4 text-[17px] font-bold text-slate-800">Change password</h2>
+        <form onSubmit={submit} className="grid gap-4">
           {(["current", "next", "confirm"] as const).map((k) => (
             <div key={k}>
-              <Label htmlFor={k}>
+              <Label htmlFor={k} className="text-[13px] font-bold text-slate-800">
                 {k === "current"
                   ? "Current password"
                   : k === "next"
@@ -69,48 +75,64 @@ function Settings() {
               <Input
                 id={k}
                 type="password"
-                className="mt-1.5"
+                className="mt-1.5 h-10 rounded-xl bg-slate-50 border-0 shadow-inner focus-visible:ring-blue-500/20"
                 value={pw[k]}
                 onChange={(e) => setPw({ ...pw, [k]: e.target.value })}
               />
             </div>
           ))}
           <FieldError message={err} />
-          <Button type="submit" className="w-fit">
+          <Button type="submit" className="w-fit rounded-xl bg-blue-600 font-bold text-white shadow-md hover:bg-blue-700 mt-2">
             Update password
           </Button>
         </form>
-      </Panel>
-      <Panel>
-        <h2 className="mb-3 font-semibold text-foreground">Notification preferences</h2>
-        {Object.entries(prefs).map(([k, v]) => (
-          <label key={k} className="flex items-center justify-between py-2 text-sm text-foreground">
-            {k}
-            <Switch
-              checked={v}
-              onCheckedChange={(c) => {
-                setPrefs({ ...prefs, [k]: c });
-                toast.success("Preference saved");
-              }}
-            />
-          </label>
-        ))}
-      </Panel>
-      <Panel>
-        <h2 className="mb-3 font-semibold text-foreground">Privacy</h2>
-        {Object.entries(privacy).map(([k, v]) => (
-          <label key={k} className="flex items-center justify-between py-2 text-sm text-foreground">
-            {k}
-            <Switch
-              checked={v}
-              onCheckedChange={(c) => {
-                setPrivacy({ ...privacy, [k]: c });
-                toast.success("Privacy setting saved");
-              }}
-            />
-          </label>
-        ))}
-      </Panel>
+      </div>
+      <div
+        className="rounded-2xl bg-white p-6 transition-all animate-fade-in-up delay-75"
+        style={{
+          boxShadow: "0 2px 16px rgba(0,0,0,0.03)",
+          border: "1px solid rgba(0,0,0,0.05)",
+        }}
+      >
+        <h2 className="mb-4 text-[17px] font-bold text-slate-800">Notification preferences</h2>
+        <div className="grid gap-1">
+          {Object.entries(prefs).map(([k, v]) => (
+            <label key={k} className="flex items-center justify-between py-2 text-[14px] font-medium text-slate-700 cursor-pointer">
+              {k}
+              <Switch
+                checked={v}
+                onCheckedChange={(c) => {
+                  setPrefs({ ...prefs, [k]: c });
+                  toast.success("Preference saved");
+                }}
+              />
+            </label>
+          ))}
+        </div>
+      </div>
+      <div
+        className="rounded-2xl bg-white p-6 transition-all animate-fade-in-up delay-150"
+        style={{
+          boxShadow: "0 2px 16px rgba(0,0,0,0.03)",
+          border: "1px solid rgba(0,0,0,0.05)",
+        }}
+      >
+        <h2 className="mb-4 text-[17px] font-bold text-slate-800">Privacy</h2>
+        <div className="grid gap-1">
+          {Object.entries(privacy).map(([k, v]) => (
+            <label key={k} className="flex items-center justify-between py-2 text-[14px] font-medium text-slate-700 cursor-pointer">
+              {k}
+              <Switch
+                checked={v}
+                onCheckedChange={(c) => {
+                  setPrivacy({ ...privacy, [k]: c });
+                  toast.success("Privacy setting saved");
+                }}
+              />
+            </label>
+          ))}
+        </div>
+      </div>
       <Button variant="outline" className="w-fit text-destructive" onClick={signOut}>
         <LogOut size={15} />
         Logout
