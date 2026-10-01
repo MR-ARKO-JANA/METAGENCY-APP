@@ -1006,8 +1006,19 @@ export function MedergencyApp({
   else content = <DashboardScreen />;
 
   return (
-    <main className="app-stage">
-      <div className={`phone-app ${step === 12 ? "phone-app-verified" : ""}`}>
+    <main className="min-h-[100dvh] bg-background md:app-stage">
+      {/* Mobile: full-screen flow */}
+      <div className={`flex min-h-[100dvh] flex-col md:hidden ${step === 12 ? "phone-app-verified" : ""}`}>
+        {step > 0 && step < 12 && (
+          <>
+            <AppHeader step={step} onBack={goBack} />
+            <StepProgress step={step} />
+          </>
+        )}
+        {content}
+      </div>
+      {/* Desktop: centered phone-app card */}
+      <div className={`phone-app hidden md:flex ${step === 12 ? "phone-app-verified" : ""}`}>
         {step > 0 && step < 12 && (
           <>
             <AppHeader step={step} onBack={goBack} />

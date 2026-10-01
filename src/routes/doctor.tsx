@@ -227,14 +227,22 @@ function DoctorDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b bg-card px-4 py-3">
-        <Brand compact />
-        <Button variant="ghost" onClick={signOut}>
-          <LogOut size={15} />
-          Logout
-        </Button>
+      <header className="sticky top-0 z-30 border-b border-border/40 bg-card/95 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
+          <Brand compact />
+          <div className="flex items-center gap-2">
+            <span className="hidden rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary sm:inline">
+              Doctor Portal
+            </span>
+            <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5">
+              <LogOut size={15} />
+              <span className="hidden sm:inline">Logout</span>
+            </Button>
+          </div>
+        </div>
       </header>
       <main className="mx-auto grid max-w-5xl gap-4 p-4 pb-10">
+
         <Panel className="flex flex-wrap items-center gap-4">
           <DoctorPhoto doctor={doctor} size={72} />
           <div className="flex-1">

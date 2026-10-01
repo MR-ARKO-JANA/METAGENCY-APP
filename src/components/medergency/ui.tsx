@@ -249,8 +249,17 @@ export function AuthShell({
   footer?: ReactNode;
 }) {
   return (
-    <main className="app-stage">
-      <div className="w-full max-w-md rounded-2xl border bg-card p-6 shadow-sm sm:p-8">
+    <main className="min-h-[100dvh] bg-background md:app-stage">
+      {/* Mobile: full-screen, no card wrapper */}
+      <div className="flex min-h-[100dvh] flex-col px-5 pt-10 pb-8 md:hidden">
+        <Brand />
+        <h1 className="mt-8 text-2xl font-bold text-foreground">{title}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
+        <div className="mt-6 flex-1">{children}</div>
+        {footer && <div className="mt-6 text-center text-sm text-muted-foreground">{footer}</div>}
+      </div>
+      {/* Desktop: centered card */}
+      <div className="hidden w-full max-w-md rounded-2xl border bg-card p-8 shadow-sm md:block">
         <Brand />
         <h1 className="mt-6 text-2xl font-bold text-foreground">{title}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>

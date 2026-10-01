@@ -67,7 +67,7 @@ export function PatientShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-30 border-b bg-card/95 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-border/40 bg-card/95 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4">
           <Brand compact />
           <form
@@ -85,7 +85,7 @@ export function PatientShell({ children }: { children: ReactNode }) {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search doctors, specialties..."
-              className="pl-9"
+              className="pl-9 rounded-xl"
               aria-label="Search doctors"
             />
           </form>
