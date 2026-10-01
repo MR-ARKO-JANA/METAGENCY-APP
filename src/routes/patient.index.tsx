@@ -52,31 +52,43 @@ function Dashboard() {
 
   const stats = [
     {
-      label: "Upcoming Appointments",
+      label: "Upcoming",
       value: mine.filter((a) => a.status === "confirmed").length,
       icon: CalendarDays,
+      color: "#2563eb",
+      bg: "#eff6ff",
+      grad: "linear-gradient(135deg, #2563eb, #1d4ed8)",
     },
     {
-      label: "Completed Consultations",
+      label: "Completed",
       value: mine.filter((a) => a.status === "completed").length,
       icon: CheckCircle2,
+      color: "#16a34a",
+      bg: "#f0fdf4",
+      grad: "linear-gradient(135deg, #22c55e, #16a34a)",
     },
     {
-      label: "Pending Appointments",
+      label: "Pending",
       value: mine.filter((a) => a.status === "pending").length,
       icon: Clock3,
+      color: "#d97706",
+      bg: "#fffbeb",
+      grad: "linear-gradient(135deg, #f59e0b, #d97706)",
     },
     {
-      label: "Available Doctors",
+      label: "Doctors Available",
       value: doctors.filter((d) => d.verification === "approved").length,
       icon: UsersRound,
+      color: "#7c3aed",
+      bg: "#f5f3ff",
+      grad: "linear-gradient(135deg, #8b5cf6, #7c3aed)",
     },
   ];
   const actions = [
-    { to: "/patient/doctors", label: "Find a Doctor", icon: Stethoscope },
-    { to: "/patient/doctors", label: "Book Appointment", icon: CalendarPlus },
-    { to: "/patient/consultations", label: "My Consultations", icon: Video },
-    { to: "/patient/records", label: "Medical Records", icon: FolderHeart },
+    { to: "/patient/doctors", label: "Find a Doctor", icon: Stethoscope, color: "#2563eb", bg: "#eff6ff" },
+    { to: "/patient/doctors", label: "Book Appointment", icon: CalendarPlus, color: "#7c3aed", bg: "#f5f3ff" },
+    { to: "/patient/consultations", label: "My Consultations", icon: Video, color: "#0891b2", bg: "#ecfeff" },
+    { to: "/patient/records", label: "Medical Records", icon: FolderHeart, color: "#e11d48", bg: "#fff1f2" },
   ] as const;
 
   return (
@@ -137,42 +149,71 @@ function Dashboard() {
         </Button>
       </form>
 
+      {/* Quick action cards */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {actions.map(({ to, label, icon: Icon }) => (
+        {actions.map(({ to, label, icon: Icon, color, bg }) => (
           <Link
             key={label}
             to={to}
-            className="flex flex-col gap-3 rounded-xl border bg-card p-4 transition-colors hover:border-primary"
+            className="group flex flex-col gap-3 rounded-2xl bg-white p-4 transition-all hover:-translate-y-0.5"
+            style={{
+              boxShadow: "0 2px 16px rgba(37,99,235,0.07)",
+              border: "1px solid rgba(59,130,246,0.1)",
+            }}
           >
-            <span className="grid h-10 w-10 place-items-center rounded-lg bg-secondary text-primary">
-              <Icon size={19} />
+            <span
+              className="grid h-11 w-11 place-items-center rounded-xl transition-transform group-hover:scale-110"
+              style={{ background: bg, color }}
+            >
+              <Icon size={20} />
             </span>
-            <span className="text-sm font-semibold text-foreground">{label}</span>
+            <span className="text-sm font-semibold text-slate-700">{label}</span>
           </Link>
         ))}
       </div>
 
+      {/* Stat cards */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {stats.map(({ label, value, icon: Icon }) => (
-          <Panel key={label} className="!p-4">
-            <Icon size={17} className="text-primary" />
-            <p className="mt-2 text-2xl font-bold text-foreground">{value}</p>
-            <p className="text-xs text-muted-foreground">{label}</p>
-          </Panel>
+        {stats.map(({ label, value, icon: Icon, color, grad }) => (
+          <div
+            key={label}
+            className="flex flex-col gap-2 rounded-2xl p-4"
+            style={{
+              background: "white",
+              boxShadow: "0 2px 16px rgba(37,99,235,0.07)",
+              border: "1px solid rgba(59,130,246,0.1)",
+            }}
+          >
+            <div
+              className="grid h-9 w-9 place-items-center rounded-xl text-white shadow-sm"
+              style={{ background: grad }}
+            >
+              <Icon size={17} />
+            </div>
+            <p className="text-2xl font-extrabold" style={{ color }}>{value}</p>
+            <p className="text-xs text-slate-400 leading-tight">{label}</p>
+          </div>
         ))}
       </div>
 
-      <Panel>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-semibold text-foreground">Upcoming appointments</h2>
-          <Link to="/patient/appointments" className="text-sm font-medium text-primary">
+      {/* Upcoming appointments */}
+      <div
+        className="rounded-2xl bg-white p-5"
+        style={{
+          boxShadow: "0 2px 16px rgba(37,99,235,0.07)",
+          border: "1px solid rgba(59,130,246,0.1)",
+        }}
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-base font-bold text-slate-800">Upcoming appointments</h2>
+          <Link to="/patient/appointments" className="text-sm font-semibold" style={{ color: "#2563eb" }}>
             View all
           </Link>
         </div>
         {upcoming.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-slate-400">
             No upcoming appointments.{" "}
-            <Link to="/patient/doctors" className="font-medium text-primary">
+            <Link to="/patient/doctors" className="font-semibold" style={{ color: "#2563eb" }}>
               Book one now
             </Link>
             .
@@ -183,16 +224,26 @@ function Dashboard() {
               const d = getDoctor(a.doctorId)!;
               const { eligible } = joinWindow(a, now);
               return (
-                <div key={a.id} className="flex flex-wrap items-center gap-3 rounded-lg border p-3">
+                <div
+                  key={a.id}
+                  className="flex flex-wrap items-center gap-3 rounded-xl p-3 transition-colors hover:bg-slate-50"
+                  style={{ border: "1px solid rgba(59,130,246,0.08)" }}
+                >
                   <DoctorPhoto doctor={d} size={44} />
                   <div className="min-w-0 flex-1">
-                    <p className="font-medium text-foreground">{d.name}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="font-semibold text-slate-800">{d.name}</p>
+                    <p className="text-xs text-slate-400">
                       {formatDate(a.date)} · {a.time}
                     </p>
                   </div>
                   <StatusPill status={a.status} />
-                  <Button size="sm" variant={eligible ? "default" : "outline"} asChild>
+                  <Button
+                    size="sm"
+                    variant={eligible ? "default" : "outline"}
+                    asChild
+                    className="rounded-lg font-semibold"
+                    style={eligible ? { background: "linear-gradient(135deg,#2563eb,#1d4ed8)", color: "white" } : {}}
+                  >
                     <Link
                       to="/patient/consultation/$appointmentId"
                       params={{ appointmentId: a.id }}
@@ -205,7 +256,7 @@ function Dashboard() {
             })}
           </div>
         )}
-      </Panel>
+      </div>
 
       <section>
         <div className="mb-3 flex items-center justify-between">

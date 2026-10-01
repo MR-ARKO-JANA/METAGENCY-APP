@@ -42,7 +42,11 @@ export function Brand({
 export function Panel({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <section
-      className={`rounded-xl border bg-card p-4 text-card-foreground shadow-sm sm:p-5 ${className}`}
+      className={`rounded-2xl bg-white p-4 text-card-foreground sm:p-5 ${className}`}
+      style={{
+        boxShadow: "0 2px 16px rgba(37,99,235,0.07)",
+        border: "1px solid rgba(59,130,246,0.1)",
+      }}
     >
       {children}
     </section>
@@ -72,29 +76,35 @@ export function PageTitle({
 export function VerifiedBadge({ doctor }: { doctor: Doctor }) {
   if (doctor.verification === "approved")
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-[11px] font-semibold text-secondary-foreground">
+      <span
+        className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
+        style={{ background: "#dcfce7", color: "#16a34a" }}
+      >
         <BadgeCheck size={13} />
         Verified
       </span>
     );
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
+    <span
+      className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
+      style={{ background: "#fef3c7", color: "#d97706" }}
+    >
       <Clock3 size={12} />
-      Verification pending
+      Pending
     </span>
   );
 }
 
 const statusStyles: Record<string, string> = {
-  pending: "bg-muted text-muted-foreground",
-  confirmed: "bg-secondary text-secondary-foreground",
-  completed: "bg-success/15 text-success",
-  cancelled: "bg-destructive/10 text-destructive",
-  rejected: "bg-destructive/10 text-destructive",
-  paid: "bg-success/15 text-success",
-  failed: "bg-destructive/10 text-destructive",
-  unpaid: "bg-muted text-muted-foreground",
-  refunded: "bg-muted text-muted-foreground",
+  pending: "background:#FFF7ED;color:#C2410C",
+  confirmed: "background:#EFF6FF;color:#2563EB",
+  completed: "background:#F0FDF4;color:#16A34A",
+  cancelled: "background:#FEF2F2;color:#DC2626",
+  rejected: "background:#FEF2F2;color:#DC2626",
+  paid: "background:#F0FDF4;color:#16A34A",
+  failed: "background:#FEF2F2;color:#DC2626",
+  unpaid: "background:#F8FAFC;color:#64748B",
+  refunded: "background:#F8FAFC;color:#64748B",
 };
 const statusLabel: Record<string, string> = {
   pending: "Awaiting doctor",
@@ -110,7 +120,8 @@ const statusLabel: Record<string, string> = {
 export function StatusPill({ status }: { status: AppointmentStatus | PaymentStatus }) {
   return (
     <span
-      className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${statusStyles[status]}`}
+      className="inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
+      style={{ ...(Object.fromEntries((statusStyles[status] ?? "").split(";").filter(Boolean).map(s => s.split(":")))) }}
     >
       {statusLabel[status]}
     </span>
@@ -125,8 +136,8 @@ export function DoctorPhoto({ doctor, size = 64 }: { doctor: Doctor; size?: numb
       width={size}
       height={size}
       loading="lazy"
-      className="shrink-0 rounded-xl bg-secondary object-cover object-top"
-      style={{ width: size, height: size }}
+      className="shrink-0 bg-secondary object-cover object-top"
+      style={{ width: size, height: size, borderRadius: 14 }}
     />
   );
 }
@@ -134,83 +145,106 @@ export function DoctorPhoto({ doctor, size = 64 }: { doctor: Doctor; size?: numb
 export function DoctorCard({ doctor, nextSlots }: { doctor: Doctor; nextSlots?: string[] }) {
   const bookable = doctor.verification === "approved";
   return (
-    <Panel className="flex flex-col gap-3">
+    <div
+      className="group flex flex-col gap-3 rounded-2xl bg-white p-4 sm:p-5 transition-all hover:-translate-y-0.5"
+      style={{
+        boxShadow: "0 2px 16px rgba(37,99,235,0.07)",
+        border: "1px solid rgba(59,130,246,0.1)",
+      }}
+    >
       <div className="flex gap-3">
         <DoctorPhoto doctor={doctor} size={72} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="truncate font-semibold text-foreground">{doctor.name}</h3>
+            <h3 className="truncate font-bold text-slate-800">{doctor.name}</h3>
             <VerifiedBadge doctor={doctor} />
           </div>
-          <p className="text-sm font-medium text-primary">{doctor.specialization}</p>
-          <p className="truncate text-xs text-muted-foreground">{doctor.qualifications}</p>
+          <p className="text-sm font-semibold" style={{ color: "#2563eb" }}>{doctor.specialization}</p>
+          <p className="truncate text-xs text-slate-400">{doctor.qualifications}</p>
           {bookable && (
-            <p className="mt-1 text-[11px] text-muted-foreground">{doctor.registration}</p>
+            <p className="mt-0.5 text-[11px] text-slate-400">{doctor.registration}</p>
           )}
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-2 rounded-lg bg-muted p-2 text-center text-xs">
+
+      {/* Stats row */}
+      <div className="grid grid-cols-3 gap-2 rounded-xl p-2.5 text-center text-xs" style={{ background: "#f8faff" }}>
         <div>
-          <strong className="block text-sm text-foreground">{doctor.experience} yrs</strong>
-          <span className="text-muted-foreground">Experience</span>
+          <strong className="block text-sm font-bold text-slate-700">{doctor.experience} yrs</strong>
+          <span className="text-slate-400">Experience</span>
         </div>
         <div>
-          <strong className="block text-sm text-foreground">₹{doctor.fee}</strong>
-          <span className="text-muted-foreground">Fee</span>
+          <strong className="block text-sm font-bold text-slate-700">₹{doctor.fee}</strong>
+          <span className="text-slate-400">Fee</span>
         </div>
         <div>
           {bookable ? (
             <>
-              <strong className="flex items-center justify-center gap-0.5 text-sm text-foreground">
+              <strong className="flex items-center justify-center gap-0.5 text-sm font-bold" style={{ color: "#f59e0b" }}>
                 <Star size={12} className="fill-current" />
                 {doctor.sampleRating}
               </strong>
-              <span className="text-muted-foreground">Sample rating</span>
+              <span className="text-slate-400">Rating</span>
             </>
           ) : (
             <>
-              <strong className="block text-sm text-foreground">—</strong>
-              <span className="text-muted-foreground">Rating</span>
+              <strong className="block text-sm font-bold text-slate-700">—</strong>
+              <span className="text-slate-400">Rating</span>
             </>
           )}
         </div>
       </div>
-      <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+
+      <p className="flex items-center gap-1.5 text-xs text-slate-400">
         <Languages size={13} />
         {doctor.languages.join(", ")}
       </p>
+
       {nextSlots && (
         <div className="flex flex-wrap gap-1.5">
           {nextSlots.length ? (
             nextSlots.slice(0, 4).map((s) => (
-              <span key={s} className="rounded-md border px-2 py-0.5 text-[11px] text-foreground">
+              <span
+                key={s}
+                className="rounded-lg px-2.5 py-1 text-[11px] font-medium"
+                style={{ background: "#eff6ff", color: "#2563eb" }}
+              >
                 {s}
               </span>
             ))
           ) : (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-slate-400">
               {bookable ? "No slots available soon" : "Not available for booking yet"}
             </span>
           )}
         </div>
       )}
+
       <div className="mt-auto grid grid-cols-2 gap-2">
-        <Button variant="outline" asChild>
+        <Button
+          variant="outline"
+          asChild
+          className="rounded-xl border-slate-200 font-semibold text-slate-700 hover:bg-slate-50"
+        >
           <Link to="/patient/doctors/$doctorId" params={{ doctorId: doctor.id }}>
             View Profile
           </Link>
         </Button>
         {bookable ? (
-          <Button asChild>
+          <Button
+            asChild
+            className="rounded-xl font-bold text-white shadow-sm"
+            style={{ background: "linear-gradient(135deg, #2563eb, #1d4ed8)" }}
+          >
             <Link to="/patient/book/$doctorId" params={{ doctorId: doctor.id }}>
               Book
             </Link>
           </Button>
         ) : (
-          <Button disabled>Unavailable</Button>
+          <Button disabled className="rounded-xl">Unavailable</Button>
         )}
       </div>
-    </Panel>
+    </div>
   );
 }
 

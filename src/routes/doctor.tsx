@@ -143,24 +143,23 @@ function DoctorDashboard() {
   }
 
   const stats = [
-    { label: "New requests", value: lists.requests.length, icon: ClipboardList },
-    { label: "Upcoming", value: lists.upcoming.length, icon: CalendarClock },
-    {
-      label: "Completed",
-      value: mine.filter((a) => a.status === "completed").length,
-      icon: CheckCircle2,
-    },
-    { label: "Unread alerts", value: unread, icon: Bell },
+    { label: "New requests", value: lists.requests.length, icon: ClipboardList, color: "#2563eb", grad: "linear-gradient(135deg,#2563eb,#1d4ed8)" },
+    { label: "Upcoming", value: lists.upcoming.length, icon: CalendarClock, color: "#7c3aed", grad: "linear-gradient(135deg,#8b5cf6,#7c3aed)" },
+    { label: "Completed", value: mine.filter((a) => a.status === "completed").length, icon: CheckCircle2, color: "#16a34a", grad: "linear-gradient(135deg,#22c55e,#16a34a)" },
+    { label: "Unread alerts", value: unread, icon: Bell, color: "#d97706", grad: "linear-gradient(135deg,#f59e0b,#d97706)" },
   ];
 
   const Row = ({ a }: { a: Appointment }) => {
     const p = patient(a.patientId);
     const { eligible } = joinWindow(a, now);
     return (
-      <div className="flex flex-wrap items-center gap-2 rounded-lg border p-3">
+      <div
+        className="flex flex-wrap items-center gap-2 rounded-xl p-3 transition-colors hover:bg-slate-50"
+        style={{ border: "1px solid rgba(59,130,246,0.1)" }}
+      >
         <div className="min-w-0 flex-1">
-          <p className="font-medium text-foreground">{p?.fullName ?? "Patient"}</p>
-          <p className="text-xs text-muted-foreground">
+          <p className="font-semibold text-slate-800">{p?.fullName ?? "Patient"}</p>
+          <p className="text-xs text-slate-400">
             {formatDate(a.date)} · {a.time} · {a.reason}
           </p>
         </div>
@@ -226,15 +225,26 @@ function DoctorDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-30 border-b border-border/40 bg-card/95 backdrop-blur-md">
+    <div className="min-h-screen" style={{ background: "#f0f4ff" }}>
+      <header
+        className="sticky top-0 z-30"
+        style={{
+          background: "rgba(255,255,255,0.92)",
+          backdropFilter: "blur(16px)",
+          borderBottom: "1px solid rgba(59,130,246,0.1)",
+          boxShadow: "0 1px 20px rgba(37,99,235,0.06)",
+        }}
+      >
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
           <Brand compact />
           <div className="flex items-center gap-2">
-            <span className="hidden rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary sm:inline">
+            <span
+              className="hidden rounded-full px-3 py-1 text-xs font-bold sm:inline"
+              style={{ background: "#eff6ff", color: "#2563eb" }}
+            >
               Doctor Portal
             </span>
-            <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5">
+            <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5 rounded-xl hover:bg-red-50 hover:text-red-500">
               <LogOut size={15} />
               <span className="hidden sm:inline">Logout</span>
             </Button>
@@ -243,30 +253,47 @@ function DoctorDashboard() {
       </header>
       <main className="mx-auto grid max-w-5xl gap-4 p-4 pb-10">
 
-        <Panel className="flex flex-wrap items-center gap-4">
+        {/* Doctor profile card */}
+        <div
+          className="flex flex-wrap items-center gap-4 rounded-2xl bg-white p-5"
+          style={{ boxShadow: "0 2px 16px rgba(37,99,235,0.07)", border: "1px solid rgba(59,130,246,0.1)" }}
+        >
           <DoctorPhoto doctor={doctor} size={72} />
           <div className="flex-1">
-            <h1 className="flex items-center gap-2 text-xl font-bold text-foreground">
+            <h1 className="flex items-center gap-2 text-xl font-bold text-slate-800">
               {doctor.name}
-              <ShieldCheck size={18} className="text-primary" />
+              <ShieldCheck size={18} style={{ color: "#2563eb" }} />
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-slate-500">
               {doctor.qualifications} · {doctor.specialization}
             </p>
-            <p className="text-xs text-muted-foreground">{doctor.registration}</p>
+            <p className="text-xs text-slate-400">{doctor.registration}</p>
           </div>
-          <div className="rounded-lg bg-muted px-3 py-2 text-sm">
-            <p className="text-muted-foreground">Fee</p>
-            <p className="font-semibold text-foreground">₹{doctor.fee}</p>
+          <div
+            className="rounded-xl px-4 py-2.5 text-center"
+            style={{ background: "linear-gradient(135deg,#eff6ff,#dbeafe)", border: "1px solid #bfdbfe" }}
+          >
+            <p className="text-xs text-slate-400">Consultation Fee</p>
+            <p className="text-lg font-extrabold" style={{ color: "#2563eb" }}>₹{doctor.fee}</p>
           </div>
-        </Panel>
+        </div>
+        {/* Stat cards */}
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          {stats.map(({ label, value, icon: Icon }) => (
-            <Panel key={label} className="!p-4">
-              <Icon size={17} className="text-primary" />
-              <p className="mt-2 text-2xl font-bold text-foreground">{value}</p>
-              <p className="text-xs text-muted-foreground">{label}</p>
-            </Panel>
+          {stats.map(({ label, value, icon: Icon, color, grad }) => (
+            <div
+              key={label}
+              className="flex flex-col gap-2 rounded-2xl bg-white p-4"
+              style={{ boxShadow: "0 2px 16px rgba(37,99,235,0.07)", border: "1px solid rgba(59,130,246,0.1)" }}
+            >
+              <div
+                className="grid h-9 w-9 place-items-center rounded-xl text-white shadow-sm"
+                style={{ background: grad }}
+              >
+                <Icon size={17} />
+              </div>
+              <p className="text-2xl font-extrabold" style={{ color }}>{value}</p>
+              <p className="text-xs text-slate-400">{label}</p>
+            </div>
           ))}
         </div>
 
