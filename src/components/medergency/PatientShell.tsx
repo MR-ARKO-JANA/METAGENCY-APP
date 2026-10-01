@@ -80,7 +80,7 @@ export function PatientShell({ children }: { children: ReactNode }) {
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4">
           <Brand compact />
           <form
-            className="relative mx-auto hidden max-w-md flex-1 md:block"
+            className="relative mx-auto hidden max-w-md flex-1 md:block animate-fade-in-down"
             onSubmit={(e) => {
               e.preventDefault();
               navigate({ to: "/patient/doctors", search: { q } });
@@ -102,7 +102,7 @@ export function PatientShell({ children }: { children: ReactNode }) {
           <div className="ml-auto flex items-center gap-2 md:ml-0">
             <Link
               to="/patient/notifications"
-              className="relative flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-blue-50"
+              className={`relative flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-blue-50 ${unread > 0 ? 'badge-pulse' : ''}`}
               aria-label={`Notifications, ${unread} unread`}
             >
               <Bell size={19} className="text-slate-600" />
@@ -118,7 +118,7 @@ export function PatientShell({ children }: { children: ReactNode }) {
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2 rounded-full px-1 py-1 hover:bg-blue-50 transition-all">
                 <span
-                  className="grid h-9 w-9 place-items-center rounded-full text-sm font-bold text-white shadow-sm"
+                  className="grid h-9 w-9 place-items-center rounded-full text-sm font-bold text-white shadow-sm animate-scale-in"
                   style={{ background: "linear-gradient(135deg, #2563eb, #7c3aed)" }}
                 >
                   {initials}
@@ -158,18 +158,20 @@ export function PatientShell({ children }: { children: ReactNode }) {
               border: "1px solid rgba(59,130,246,0.1)",
             }}
           >
-            {side.map(({ to, label, icon: Icon, ...rest }) => (
+            {side.map(({ to, label, icon: Icon, ...rest }, i) => (
               <Link
                 key={to}
                 to={to}
                 activeOptions={{ exact: "exact" in rest }}
-                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-500 transition-all hover:bg-blue-50 hover:text-blue-600"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-500 transition-all hover:bg-blue-50 hover:text-blue-600 animate-slide-in-left"
+                style={{ animationDelay: `${i * 40}ms` }}
                 activeProps={{
-                  className: "rounded-xl px-3 py-2.5 text-sm font-semibold flex items-center gap-3 transition-all",
+                  className: "rounded-xl px-3 py-2.5 text-sm font-semibold flex items-center gap-3 transition-all animate-slide-in-left",
                   style: {
                     background: "linear-gradient(135deg, #2563eb15, #7c3aed10)",
                     color: "#2563eb",
                     borderLeft: "3px solid #2563eb",
+                    animationDelay: `${i * 40}ms`,
                   },
                 }}
               >

@@ -93,7 +93,7 @@ function Dashboard() {
 
   return (
     <div className="grid gap-5">
-      <div className="mb-2">
+      <div className="mb-2 animate-fade-in-down">
         <h1 className="text-xl font-bold text-slate-800 sm:text-2xl">
           Hello, {currentPatient?.fullName.split(" ")[0]} 👋
         </h1>
@@ -101,8 +101,8 @@ function Dashboard() {
       </div>
 
       <section
-        className="relative overflow-hidden rounded-3xl p-6 sm:p-8"
-        style={{ background: "linear-gradient(135deg, #0f2b73 0%, #0a1f5c 100%)" }}
+        className="relative overflow-hidden rounded-3xl p-6 sm:p-8 animate-gradient animate-fade-in-up"
+        style={{ background: "linear-gradient(135deg, #0f2b73 0%, #1e40af 40%, #2563eb 70%, #0f2b73 100%)", backgroundSize: "200% 200%" }}
       >
         <div className="relative z-10 w-2/3 md:w-1/2">
           <h2 className="text-xl font-bold leading-tight text-white sm:text-2xl md:text-3xl">
@@ -112,7 +112,7 @@ function Dashboard() {
             Book an instant consultation<br />with experienced doctors
           </p>
           <Button 
-            className="mt-5 rounded-xl bg-white px-6 font-bold text-[#0f2b73] hover:bg-slate-100 shadow-md"
+            className="mt-5 rounded-xl bg-white px-6 font-bold text-[#0f2b73] hover:bg-slate-100 shadow-md btn-ripple animate-pulse-glow"
             onClick={() => navigate({ to: "/patient/doctors" })}
           >
             Consult Now
@@ -121,12 +121,12 @@ function Dashboard() {
         <img
           src={doctorPortrait}
           alt="Doctor"
-          className="absolute bottom-0 right-0 h-[110%] w-auto object-contain object-bottom drop-shadow-xl md:-right-5"
+          className="absolute bottom-0 right-0 h-[110%] w-auto object-contain object-bottom drop-shadow-xl md:-right-5 animate-float-slow"
         />
       </section>
 
       <form
-        className="mt-2 flex max-w-xl flex-col gap-2 sm:flex-row"
+        className="mt-2 flex max-w-xl flex-col gap-2 sm:flex-row animate-fade-in-up delay-100"
         onSubmit={(e) => {
           e.preventDefault();
           navigate({ to: "/patient/doctors", search: { q } });
@@ -151,18 +151,19 @@ function Dashboard() {
 
       {/* Quick action cards */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {actions.map(({ to, label, icon: Icon, color, bg }) => (
+        {actions.map(({ to, label, icon: Icon, color, bg }, i) => (
           <Link
             key={label}
             to={to}
-            className="group flex flex-col gap-3 rounded-2xl bg-white p-4 transition-all hover:-translate-y-0.5"
+            className={`group flex flex-col gap-3 rounded-2xl bg-white p-4 card-hover animate-fade-in-up`}
             style={{
               boxShadow: "0 2px 16px rgba(37,99,235,0.07)",
               border: "1px solid rgba(59,130,246,0.1)",
+              animationDelay: `${i * 80}ms`,
             }}
           >
             <span
-              className="grid h-11 w-11 place-items-center rounded-xl transition-transform group-hover:scale-110"
+              className="grid h-11 w-11 place-items-center rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6"
               style={{ background: bg, color }}
             >
               <Icon size={20} />
@@ -174,14 +175,15 @@ function Dashboard() {
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {stats.map(({ label, value, icon: Icon, color, grad }) => (
+        {stats.map(({ label, value, icon: Icon, color, grad }, i) => (
           <div
             key={label}
-            className="flex flex-col gap-2 rounded-2xl p-4"
+            className={`flex flex-col gap-2 rounded-2xl p-4 card-hover animate-scale-in`}
             style={{
               background: "white",
               boxShadow: "0 2px 16px rgba(37,99,235,0.07)",
               border: "1px solid rgba(59,130,246,0.1)",
+              animationDelay: `${i * 100}ms`,
             }}
           >
             <div
