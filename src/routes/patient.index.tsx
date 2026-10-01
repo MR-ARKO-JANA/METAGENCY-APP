@@ -175,7 +175,7 @@ function Dashboard() {
     { title: "Psychiatrist", desc: "For stress, anxiety, depression & more", icon: UsersRound, bg: "#f5f3ff", color: "#7c3aed" },
   ];
 
-  const { ref: heroRef, visible: heroVisible } = useReveal(0.01);
+  // Removed scroll reveal for hero to keep it fixed
   const { ref: apptRef, visible: apptVisible } = useReveal();
 
   return (
@@ -191,13 +191,9 @@ function Dashboard() {
 
       {/* ── Hero banner (static background + fixed image) ── */}
       <div
-        ref={heroRef}
-        className="relative overflow-hidden rounded-3xl p-6 sm:p-8"
+        className="relative overflow-hidden rounded-3xl p-6 sm:p-8 animate-fade-in-up"
         style={{
           background: "linear-gradient(135deg, #0f2b73 0%, #1e40af 45%, #2563eb 75%, #0f2b73 100%)",
-          opacity: heroVisible ? 1 : 0,
-          transform: heroVisible ? "translateY(0)" : "translateY(30px)",
-          transition: "opacity 0.6s ease, transform 0.6s cubic-bezier(.34,1.2,.64,1)",
         }}
       >
         {/* Decorative background orbs (static) */}
