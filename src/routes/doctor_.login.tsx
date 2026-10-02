@@ -58,20 +58,6 @@ function DoctorLogin() {
     <AuthShell
       title="Doctor login"
       subtitle="Manage your consultations and availability."
-      footer={
-        <>
-          Not registered yet?{" "}
-          <Link to="/doctor/onboarding" className="font-semibold text-primary">
-            Join as Doctor
-          </Link>
-          <p className="mt-3">
-            Are you a patient?{" "}
-            <Link to="/patient/login" className="font-semibold text-primary">
-              Patient login
-            </Link>
-          </p>
-        </>
-      }
     >
       <form onSubmit={submit} className="grid gap-4" noValidate>
         <div>
@@ -110,6 +96,18 @@ function DoctorLogin() {
         <Button type="submit" size="lg">
           Login
         </Button>
+        <div className="text-center text-sm text-muted-foreground mt-2 mb-2">
+          Not registered yet?{" "}
+          <Link to="/doctor/onboarding" className="font-semibold text-primary">
+            Join as Doctor
+          </Link>
+          <div className="mt-2">
+            Are you a patient?{" "}
+            <Link to="/patient/login" className="font-semibold text-primary">
+              Patient login
+            </Link>
+          </div>
+        </div>
         <button
           type="button"
           onClick={() => {

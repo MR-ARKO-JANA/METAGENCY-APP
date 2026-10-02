@@ -4,6 +4,8 @@ import { useState } from "react";
 import companyLogo from "@/assets/signal-2026-09-15-23-14-14-623.png";
 import companyName from "@/assets/signal-2026-09-15-23-14-14-623_002.png";
 import doctorImg from "@/assets/doctor-3.jpg";
+import doctorAvt from "@/assets/doctorAvt.jpg";
+import patientAvt from "@/assets/PatientAvt.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -177,15 +179,6 @@ function Landing() {
             <p className="mt-0.5 text-[10px] font-semibold tracking-widest text-[#6B7280] uppercase">Life Deserves Care</p>
           </div>
 
-          {/* Skip */}
-          <div className="flex justify-end px-6 mb-2">
-            <button
-              onClick={() => navigate({ to: "/patient/login" })}
-              className="text-sm font-medium text-[#6B7280] hover:text-[#2563EB] transition-colors"
-            >
-              Skip
-            </button>
-          </div>
 
           {/* Heading */}
           <div className="px-6 mb-6">
@@ -203,8 +196,8 @@ function Landing() {
               onClick={() => navigate({ to: "/patient/login" })}
               className="group flex w-full items-center gap-4 rounded-3xl bg-white p-4 text-left shadow-sm active:scale-[0.98] transition-all border border-[#E5EDFF] hover:border-[#93C5FD] hover:shadow-md"
             >
-              <div className="h-[72px] w-[60px] shrink-0 overflow-hidden">
-                <PatientAvatar />
+              <div className="h-[72px] w-[72px] shrink-0">
+                <img src={patientAvt} alt="Patient" className="h-full w-full object-contain mix-blend-multiply" />
               </div>
               <div className="flex-1">
                 <h3 className="text-base font-bold text-[#111827]">I am a Patient</h3>
@@ -222,8 +215,8 @@ function Landing() {
               onClick={() => navigate({ to: "/doctor/login" })}
               className="group flex w-full items-center gap-4 rounded-3xl bg-white p-4 text-left shadow-sm active:scale-[0.98] transition-all border border-[#EDE9FE] hover:border-[#C4B5FD] hover:shadow-md"
             >
-              <div className="h-[72px] w-[60px] shrink-0 overflow-hidden">
-                <DoctorAvatar />
+              <div className="h-[72px] w-[72px] shrink-0">
+                <img src={doctorAvt} alt="Doctor" className="h-full w-full object-contain mix-blend-multiply" />
               </div>
               <div className="flex-1">
                 <h3 className="text-base font-bold text-[#111827]">I am a Doctor</h3>
