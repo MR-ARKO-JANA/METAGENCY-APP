@@ -53,7 +53,7 @@ export const Route = createFileRoute("/doctor")({
   ),
 });
 
-type Tab = "requests" | "upcoming" | "history" | "availability" | "notifications";
+type Tab = "requests" | "upcoming" | "history" | "notifications";
 const WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const ALL_SLOTS = [
   "9:00 AM",
@@ -143,8 +143,8 @@ function DoctorDashboard() {
   }
 
   const stats = [
-    { label: "New requests", value: lists.requests.length, icon: ClipboardList, color: "#2563eb", grad: "linear-gradient(135deg,#2563eb,#1d4ed8)" },
-    { label: "Upcoming", value: lists.upcoming.length, icon: CalendarClock, color: "#7c3aed", grad: "linear-gradient(135deg,#8b5cf6,#7c3aed)" },
+    { label: "Incoming calls", value: lists.requests.length, icon: ClipboardList, color: "#2563eb", grad: "linear-gradient(135deg,#2563eb,#1d4ed8)" },
+    { label: "Active calls", value: lists.upcoming.length, icon: CalendarClock, color: "#7c3aed", grad: "linear-gradient(135deg,#8b5cf6,#7c3aed)" },
     { label: "Completed", value: mine.filter((a) => a.status === "completed").length, icon: CheckCircle2, color: "#16a34a", grad: "linear-gradient(135deg,#22c55e,#16a34a)" },
     { label: "Unread alerts", value: unread, icon: Bell, color: "#d97706", grad: "linear-gradient(135deg,#f59e0b,#d97706)" },
   ];
@@ -177,11 +177,11 @@ function DoctorDashboard() {
                   { status: "confirmed" },
                   {
                     userId: a.patientId,
-                    title: "Appointment confirmed",
-                    body: `${doctor.name} confirmed ${a.id} for ${formatDate(a.date)} at ${a.time}.`,
+                    title: "Call accepted",
+                    body: `${doctor.name} accepted your call.`,
                   },
                 );
-                toast.success("Appointment accepted");
+                toast.success("Call accepted");
               }}
             >
               Accept
@@ -196,11 +196,11 @@ function DoctorDashboard() {
                   { status: "rejected", payment: "refunded" },
                   {
                     userId: a.patientId,
-                    title: "Appointment declined",
-                    body: `${a.id} was declined. Simulated refund issued.`,
+                    title: "Call declined",
+                    body: `Your call was declined. Simulated refund issued.`,
                   },
                 );
-                toast("Appointment declined");
+                toast("Call declined");
               }}
             >
               Reject
@@ -299,13 +299,12 @@ function DoctorDashboard() {
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)}>
           <TabsList className="h-auto flex-wrap">
-            <TabsTrigger value="requests">Requests ({lists.requests.length})</TabsTrigger>
-            <TabsTrigger value="upcoming">Upcoming ({lists.upcoming.length})</TabsTrigger>
+            <TabsTrigger value="requests">Incoming Calls ({lists.requests.length})</TabsTrigger>
+            <TabsTrigger value="upcoming">Active Calls ({lists.upcoming.length})</TabsTrigger>
             <TabsTrigger value="history">
               <History size={14} />
               History
             </TabsTrigger>
-            <TabsTrigger value="availability">Availability</TabsTrigger>
             <TabsTrigger value="notifications">Alerts{unread ? ` (${unread})` : ""}</TabsTrigger>
           </TabsList>
         </Tabs>
@@ -322,60 +321,7 @@ function DoctorDashboard() {
           </Panel>
         )}
 
-        {tab === "availability" && (
-          <Panel className="grid gap-4">
-            <div>
-              <h2 className="font-semibold text-foreground">Working days</h2>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {WEEK.map((d, i) => (
-                  <button
-                    key={d}
-                    type="button"
-                    onClick={() =>
-                      setDays((x) => (x.includes(i) ? x.filter((y) => y !== i) : [...x, i].sort()))
-                    }
-                    className={`rounded-full border px-3 py-1 text-sm ${days.includes(i) ? "border-primary bg-secondary text-secondary-foreground" : "bg-card text-muted-foreground"}`}
-                  >
-                    {d}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h2 className="font-semibold text-foreground">Time slots</h2>
-              <p className="text-xs text-muted-foreground">
-                Patients only see slots you select here.
-              </p>
-              <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4">
-                {ALL_SLOTS.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() =>
-                      setSlots((x) =>
-                        x.includes(s)
-                          ? x.filter((y) => y !== s)
-                          : ALL_SLOTS.filter((y) => x.includes(y) || y === s),
-                      )
-                    }
-                    className={`rounded-lg border py-2 text-sm ${slots.includes(s) ? "border-primary bg-secondary text-secondary-foreground" : "bg-card text-foreground"}`}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <Button
-              className="w-fit"
-              onClick={() => {
-                setAvailability(doctor.id, { weekdays: days, slots });
-                toast.success("Availability saved");
-              }}
-            >
-              Save availability
-            </Button>
-          </Panel>
-        )}
+
 
         {tab === "notifications" && <NotificationList userId={doctor.id} />}
       </main>
@@ -412,6 +358,62 @@ function DoctorDashboard() {
                   ))}
               </dl>
             </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={lists.requests.length > 0} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-sm text-center [&>button]:hidden">
+          {lists.requests[0] && (
+            <div className="flex flex-col items-center gap-4 py-4">
+              <div className="animate-pulse rounded-full p-5" style={{ background: "rgba(37, 99, 235, 0.1)" }}>
+                <Video size={32} style={{ color: "#2563eb" }} />
+              </div>
+              <div>
+                <DialogTitle className="text-xl font-bold">Incoming Video Call</DialogTitle>
+                <DialogDescription className="mt-2 text-base text-slate-800">
+                  <span className="font-semibold">{patient(lists.requests[0].patientId)?.fullName}</span> is calling...
+                </DialogDescription>
+              </div>
+              <div className="mt-4 flex w-full gap-3">
+                <Button
+                  variant="outline"
+                  className="flex-1 border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700"
+                  onClick={() => {
+                    updateAppointment(
+                      lists.requests[0]!.id,
+                      { status: "rejected", payment: "refunded" },
+                      {
+                        userId: lists.requests[0]!.patientId,
+                        title: "Call declined",
+                        body: `Your call was declined. Simulated refund issued.`,
+                      }
+                    );
+                  }}
+                >
+                  Decline
+                </Button>
+                <Button
+                  className="flex-1 font-bold text-white shadow-md hover:opacity-90 transition-opacity"
+                  style={{ background: "linear-gradient(135deg,#22c55e,#16a34a)" }}
+                  onClick={() => {
+                    const req = lists.requests[0]!;
+                    updateAppointment(
+                      req.id,
+                      { status: "confirmed" },
+                      {
+                        userId: req.patientId,
+                        title: "Call accepted",
+                        body: `${doctor.name} accepted your call.`,
+                      }
+                    );
+                    setCall(req);
+                  }}
+                >
+                  Accept
+                </Button>
+              </div>
+            </div>
           )}
         </DialogContent>
       </Dialog>

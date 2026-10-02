@@ -2,18 +2,15 @@ import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-ro
 import {
   ArrowLeft,
   Building2,
-  Calendar,
   GraduationCap,
   Languages,
   ShieldCheck,
   Star,
   Video,
 } from "lucide-react";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DoctorPhoto, Panel } from "@/components/medergency/ui";
-import { SlotPicker } from "@/components/medergency/SlotPicker";
-import { getDoctor } from "@/lib/medergency/store";
+import { getDoctor, useMedergency } from "@/lib/medergency/store";
 
 export const Route = createFileRoute("/patient/doctors/$doctorId")({
   loader: ({ params }) => {
@@ -25,16 +22,24 @@ export const Route = createFileRoute("/patient/doctors/$doctorId")({
     meta: loaderData
       ? [
           { title: `${loaderData.name} — ${loaderData.specialization} | Medergency` },
-          { name: "description", content: `View ${loaderData.name}'s profile and book a video consultation.` },
+          {
+            name: "description",
+            content: `View ${loaderData.name}'s profile and book a video consultation.`,
+          },
           { property: "og:title", content: `${loaderData.name} | Medergency` },
-          { property: "og:description", content: `${loaderData.specialization} available for video consultations.` },
+          {
+            property: "og:description",
+            content: `${loaderData.specialization} available for video consultations.`,
+          },
         ]
       : [{ title: "Doctor not found" }, { name: "robots", content: "noindex" }],
   }),
   notFoundComponent: () => (
     <Panel>
       <p className="text-foreground">Doctor not found.</p>
-      <Link to="/patient/doctors" className="text-primary">Back to doctors</Link>
+      <Link to="/patient/doctors" className="text-primary">
+        Back to doctors
+      </Link>
     </Panel>
   ),
   component: Profile,
@@ -44,19 +49,45 @@ function Profile() {
   const { doctorId } = Route.useParams();
   const doctor = getDoctor(doctorId)!;
   const navigate = useNavigate();
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+  const { currentPatient, createAppointment } = useMedergency();
   const approved = doctor.verification === "approved";
+
+  const handleStartCall = () => {
+    if (!currentPatient) return;
+    const now = new Date();
+    // Format YYYY-MM-DD
+    const dateStr = now.toISOString().split("T")[0]!;
+    // Format HH:MM
+    const timeStr = now.toTimeString().split(" ")[0]!.substring(0, 5);
+
+    const appt = createAppointment({
+      doctorId,
+      patientId: currentPatient.id,
+      date: dateStr,
+      time: timeStr,
+      status: "pending",
+      reason: "Direct video consultation",
+      reports: [],
+      payment: "paid",
+    });
+
+    navigate({
+      to: "/patient/consultation/$appointmentId",
+      params: { appointmentId: appt.id },
+    });
+  };
 
   return (
     <div className="grid gap-5">
-
       {/* Back link */}
       <Link
         to="/patient/doctors"
         className="group flex items-center gap-1.5 text-sm font-bold text-slate-500 hover:text-blue-600 transition-colors w-fit animated-underline animate-fade-in-down"
       >
-        <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1 duration-200" />
+        <ArrowLeft
+          size={15}
+          className="transition-transform group-hover:-translate-x-1 duration-200"
+        />
         All doctors
       </Link>
 
@@ -71,7 +102,10 @@ function Profile() {
         {/* Decorative gradient blob */}
         <div
           className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full opacity-10"
-          style={{ background: "radial-gradient(circle, #2563eb 0%, transparent 70%)", animation: "float 6s ease-in-out infinite" }}
+          style={{
+            background: "radial-gradient(circle, #2563eb 0%, transparent 70%)",
+            animation: "float 6s ease-in-out infinite",
+          }}
         />
 
         <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-start">
@@ -114,7 +148,14 @@ function Profile() {
                 { icon: Building2, text: doctor.hospital },
                 { icon: Languages, text: doctor.languages.join(", ") },
                 { icon: Video, text: "Video Consultation" },
-                ...(approved ? [{ icon: Star, text: `${doctor.sampleRating} (sample rating, not real reviews)` }] : []),
+                ...(approved
+                  ? [
+                      {
+                        icon: Star,
+                        text: `${doctor.sampleRating} (sample rating, not real reviews)`,
+                      },
+                    ]
+                  : []),
               ].map(({ icon: Icon, text }, i) => (
                 <div
                   key={i}
@@ -151,27 +192,17 @@ function Profile() {
               className="mt-4 w-full rounded-xl font-bold shadow-md btn-ripple animate-pulse-glow"
               style={{ background: "linear-gradient(135deg,#2563eb,#1d4ed8)", color: "white" }}
               disabled={!approved}
-              onClick={() =>
-                navigate({
-                  to: "/patient/book/$doctorId",
-                  params: { doctorId },
-                  search: date && time ? { date, time } : {},
-                })
-              }
+              onClick={handleStartCall}
             >
-              Book Appointment
+              Start Video Call Now
             </Button>
-            {!approved && (
-              <p className="mt-2 text-[10px] text-slate-400">Verification pending</p>
-            )}
+            {!approved && <p className="mt-2 text-[10px] text-slate-400">Verification pending</p>}
           </div>
         </div>
       </div>
 
-      {/* About + Availability */}
-      <div className="grid gap-5 lg:grid-cols-[1fr_1.2fr]">
-
-        {/* About card */}
+      {/* About */}
+      <div className="grid gap-5">
         <div
           className="rounded-2xl bg-white p-5 animate-fade-in-up delay-100"
           style={{
@@ -188,38 +219,6 @@ function Profile() {
             >
               {doctor.registration}
             </div>
-          )}
-        </div>
-
-        {/* Availability card */}
-        <div
-          className="rounded-2xl bg-white p-5 animate-fade-in-up delay-200"
-          style={{
-            boxShadow: "0 2px 16px rgba(37,99,235,0.06)",
-            border: "1px solid rgba(59,130,246,0.1)",
-          }}
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <div
-              className="grid h-8 w-8 place-items-center rounded-xl text-white"
-              style={{ background: "linear-gradient(135deg,#2563eb,#1d4ed8)" }}
-            >
-              <Calendar size={15} />
-            </div>
-            <h2 className="text-[17px] font-black text-slate-800">Availability calendar</h2>
-          </div>
-          {approved ? (
-            <SlotPicker
-              doctorId={doctorId}
-              date={date}
-              time={time}
-              onDate={setDate}
-              onTime={setTime}
-            />
-          ) : (
-            <p className="text-sm text-slate-400">
-              This doctor's verification is still pending, so booking is not available yet.
-            </p>
           )}
         </div>
       </div>

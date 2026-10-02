@@ -39,7 +39,7 @@ function useCountUp(end: number, duration = 1200) {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setStarted(true); obs.disconnect(); } },
+      (entries) => { if (entries[0]?.isIntersecting) { setStarted(true); obs.disconnect(); } },
       { threshold: 0.3 }
     );
     obs.observe(el);
@@ -69,7 +69,7 @@ function useReveal(threshold = 0.12) {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      (entries) => { if (entries[0]?.isIntersecting) { setVisible(true); obs.disconnect(); } },
       { threshold }
     );
     obs.observe(el);

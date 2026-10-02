@@ -60,9 +60,9 @@ function FindDoctor() {
         {["General Physician", "Gynecologist", "Psychiatrist"].map((spec) => (
           <button
             key={spec}
-            onClick={() => setFilters({ ...filters, specialty: spec })}
+            onClick={() => setFilters({ ...filters, specialization: spec })}
             className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
-              filters.specialty === spec
+              filters.specialization === spec
                 ? "bg-blue-600 text-white shadow-md"
                 : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
             }`}

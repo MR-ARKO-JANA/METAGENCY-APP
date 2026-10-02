@@ -10,7 +10,7 @@ export function useCountUp(end: number, duration = 1000) {
     const el = ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setStarted(true); observer.disconnect(); } },
+      (entries) => { if (entries[0]?.isIntersecting) { setStarted(true); observer.disconnect(); } },
       { threshold: 0.3 }
     );
     observer.observe(el);
@@ -43,7 +43,7 @@ export function useInView(threshold = 0.15) {
     const el = ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setInView(true); observer.disconnect(); } },
+      (entries) => { if (entries[0]?.isIntersecting) { setInView(true); observer.disconnect(); } },
       { threshold }
     );
     observer.observe(el);
@@ -62,8 +62,8 @@ export function useStaggerInView(count: number, threshold = 0.1) {
     const el = containerRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
           observer.disconnect();
           for (let i = 0; i < count; i++) {
             setTimeout(() => setVisibleCount((c) => c + 1), i * 80);

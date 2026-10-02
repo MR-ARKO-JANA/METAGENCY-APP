@@ -93,6 +93,16 @@ export function MedergencyProvider({ children }: { children: ReactNode }) {
     } catch {
       setData(initialData());
     }
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY && e.newValue) {
+        try {
+          setData(JSON.parse(e.newValue) as DataState);
+        } catch {}
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
   useEffect(() => {
